@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Simple Task Management App - Organize your day, capture your thoughts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "accent-success": "#10B981",
+                    "primary-fixed": "#d3e3ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed": "#1a1b22",
+                    "on-primary-fixed-variant": "#004883",
+                    "secondary-container": "#e3e1ec",
+                    "on-background": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "primary-fixed-dim": "#a3c9ff",
+                    "primary-container": "#0067b8",
+                    "tertiary": "#7f3a00",
+                    "on-secondary-fixed-variant": "#46464e",
+                    "outline": "#717783",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#c6c5cf",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary-fixed": "#321300",
+                    "inverse-surface": "#2f3131",
+                    "on-primary-fixed": "#001c39",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-container": "#63646c",
+                    "muted": "#71717A",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#a44d01",
+                    "surface-container-low": "#f3f3f3",
+                    "background": "#f9f9f9",
+                    "surface-container": "#eeeeee",
+                    "surface-tint": "#0060ab",
+                    "surface": "#FFFFFF",
+                    "tertiary-fixed": "#ffdbc8",
+                    "tertiary-fixed-dim": "#ffb68a",
+                    "primary": "#004f8f",
+                    "accent-error": "#EF4444",
+                    "inverse-primary": "#a3c9ff",
+                    "accent-warning": "#F59E0B",
+                    "foreground": "#000000",
+                    "secondary": "#5d5e66",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#e3e1ec",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary-container": "#d6e5ff",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c1c7d3",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-tertiary-container": "#ffdecc",
+                    "surface-variant": "#e2e2e2",
+                    "surface-dim": "#dadada",
+                    "border": "#E4E4E7",
+                    "on-tertiary-fixed-variant": "#743400",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#414751"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "container-max": "1200px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "code": ["Geist"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-md": ["Geist"],
+                    "label-md": ["Geist"],
+                    "title-md": ["Geist"],
+                    "display": ["Geist"],
+                    "headline-lg": ["Geist"]
+            },
+            "fontSize": {
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "display": ["48px", {"lineHeight": "52px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-4 bg-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-stack-lg">
+<span class="font-title-lg text-title-lg font-bold text-primary dark:text-inverse-primary">Simple Task Management App</span>
+<nav class="hidden md:flex gap-stack-md">
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Features</a>
+<a class="font-body-md text-body-md text-secondary dark:text-secondary-fixed-dim hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Pricing</a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-sm">
+<button class="px-4 py-2 font-body-md text-body-md text-secondary dark:text-secondary-fixed-dim hover:text-primary transition-colors">Login</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-body-md text-body-md rounded-lg Active: opacity-80 transition-opacity">Sign Up</button>
+</div>
+</header>
+<main class="pt-32">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-gutter mb-stack-lg">
+<div class="flex flex-col md:flex-row items-center gap-stack-lg">
+<div class="md:w-1/2 space-y-stack-md">
+<h1 class="font-display text-display text-on-surface">Organize your day, capture your thoughts</h1>
+<p class="font-body-lg text-body-lg text-muted max-w-lg">
+                        A seamless fusion of task management and note-taking. Markdown-powered tasks, nested lists, and a distraction-free writing experience.
+                    </p>
+<div class="flex gap-stack-sm pt-4">
+<button class="px-6 py-3 bg-primary text-on-primary font-title-md text-title-md rounded-xl hover:opacity-90 transition-all shadow-sm">Get Started for Free</button>
+<button class="px-6 py-3 border border-border bg-surface text-secondary font-title-md text-title-md rounded-xl hover:bg-surface-container-low transition-all">View Demo</button>
+</div>
+</div>
+<div class="md:w-1/2 w-full">
+<div class="relative rounded-xl border border-border overflow-hidden bg-surface-container-low aspect-video shadow-xl">
+<img alt="Clean App Interface" class="w-full h-full object-cover" data-alt="A professional and sleek user interface of a productivity application shown on a high-resolution display. The layout is minimalist with a clean sidebar, a central task list using markdown syntax, and soft pastel category tags. The lighting is bright and airy, reflecting a modern workspace aesthetic with a focus on functional minimalism and neutral color tones like slate and off-white. The atmosphere is calm and productive, emphasizing clarity and order." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCwZV8n1d99Sqafh0grCdXybz4ItuBJt6CJ0UVQgz8r3_jU-Enx2YFCxELVW-S3-9e3Cihwbfi-t55c47pDRTOeuR1lN8cB9gJua15Jvtg3X6ee-3oH7tQeG_24_pmfYWDtNSwEdRP_mcdmai4I8zBBVen-DRYnQulJdZgU6lqiDBgXXDqyxs2ZMrFUQValxa1dlfIlxLwQpSduvLW-oO7XmzzOUesCaDGLUXff5_NnfVrJfe4PA292GY4wp-xw_LAMUJ7SdA-RzO7"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Highlights -->
+<section class="bg-surface-container-lowest py-stack-lg border-y border-border">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
+<!-- Feature 1 -->
+<div class="p-8 border border-border bg-surface rounded-xl hover:shadow-md transition-shadow group">
+<div class="w-12 h-12 bg-primary-fixed text-primary rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-stack-sm">Effortless Tasking</h3>
+<p class="font-body-md text-body-md text-muted leading-relaxed">
+                            Intuitive workflows for creating, updating, and deleting tasks. Manage your daily agenda with zero friction using keyboard shortcuts and drag-and-drop.
+                        </p>
+</div>
+<!-- Feature 2 -->
+<div class="p-8 border border-border bg-surface rounded-xl hover:shadow-md transition-shadow group">
+<div class="w-12 h-12 bg-primary-fixed text-primary rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">code</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-stack-sm">Markdown Ready</h3>
+<p class="font-body-md text-body-md text-muted leading-relaxed">
+                            Write your tasks and notes in plain text markdown. Experience live previews of bold text, links, and code snippets directly in your task view.
+                        </p>
+</div>
+<!-- Feature 3 -->
+<div class="p-8 border border-border bg-surface rounded-xl hover:shadow-md transition-shadow group">
+<div class="w-12 h-12 bg-primary-fixed text-primary rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-stack-sm">Tasks Meet Notes</h3>
+<p class="font-body-md text-body-md text-muted leading-relaxed">
+                            A comprehensive tool that eliminates the gap between to-do lists and long-form writing. Attach detailed notes to any task for full context.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof / Simplicity Section -->
+<section class="py-stack-lg bg-surface">
+<div class="max-w-3xl mx-auto px-gutter text-center">
+<h2 class="font-headline-lg text-headline-lg mb-stack-sm">Complexity simplified</h2>
+<p class="font-body-lg text-body-lg text-muted mb-stack-lg">
+                    We've removed the clutter found in traditional management tools to give you a clean slate every morning. No steep learning curves, just pure productivity.
+                </p>
+<div class="flex flex-wrap justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2 font-title-md text-title-md">
+<span class="material-symbols-outlined">bolt</span>
+                        FASTTECH
+                    </div>
+<div class="flex items-center gap-2 font-title-md text-title-md">
+<span class="material-symbols-outlined">auto_awesome</span>
+                        CREATIVE.CO
+                    </div>
+<div class="flex items-center gap-2 font-title-md text-title-md">
+<span class="material-symbols-outlined">architecture</span>
+                        DESIGNER'S HUB
+                    </div>
+</div>
+</div>
+</section>
+<!-- Bottom CTA -->
+<section class="py-24 bg-primary-fixed/30 border-t border-border">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="bg-surface border border-border p-12 rounded-full flex flex-col md:flex-row items-center justify-between gap-stack-lg shadow-sm">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-2">Ready to simplify your workflow?</h2>
+<p class="font-body-md text-body-md text-muted">Join 50,000+ professionals organizing their lives better.</p>
+</div>
+<button class="whitespace-nowrap px-10 py-4 bg-primary text-on-primary font-title-md text-title-md rounded-full hover:shadow-lg transition-all active:scale-95">Sign Up Now</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg px-gutter flex flex-col md:flex-row justify-between items-center gap-stack-md bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant dark:border-outline">
+<div class="flex flex-col gap-2">
+<span class="font-title-md text-title-md font-semibold text-on-surface dark:text-inverse-on-surface">Simple Task Management App</span>
+<p class="font-label-md text-label-md text-on-secondary-container dark:text-on-secondary-fixed-variant">© 2024 Simple Task Management App. All rights reserved.</p>
+</div>
+<div class="flex gap-stack-md">
+<a class="font-label-md text-label-md text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">Contact Support</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.style.transform = 'translateY(-1px)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simple scroll reveal for header
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body></html>
