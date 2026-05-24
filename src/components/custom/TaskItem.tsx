@@ -1,6 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { TrashIcon } from "lucide-react";
 import type { Task } from "@/types/task";
 
@@ -27,15 +38,30 @@ export function TaskItem({ task, onDelete }: TaskItemProps) {
       <div className="text-sm text-muted-foreground">{task.createdAt ? formatDateTime(task.createdAt) : "-"}</div>
       <div className="text-sm text-muted-foreground">{task.completeBy ? formatDateTime(task.completeBy) : "-"}</div>
       <div className="flex justify-end">
-        <Button
-          variant="destructive"
-          size="icon"
-          className="shrink-0"
-          onClick={() => onDelete?.(task.id)}
-          aria-label={`Delete task ${task.title}`}
-        >
-          <TrashIcon />
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              size="icon"
+              className="shrink-0"
+              aria-label={`Delete task ${task.title}`}
+            >
+              <TrashIcon />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Task</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{task.title}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDelete?.(task.id)}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
