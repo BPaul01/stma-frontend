@@ -29,12 +29,16 @@ jobs:
 
       # Verifies the project builds successfully on Pull Requests
       - name: Build project
-        run: npm run build
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+        run: npx dotenvx run -f .env.production -- npm run build
 
       - name: Configure Git and Deploy
         if: github.event_name == 'push'
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          npm run deploy
+          npx dotenvx run -f .env.production -- npm run deploy
