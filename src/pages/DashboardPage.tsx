@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,17 +25,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { TaskItem } from "@/components/custom/TaskItem";
 import type { Task } from "@/types/task";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { createTask } from "@/api/tasks";
-
-const INITIAL_TASKS: Task[] = [
-  { id: "1", title: "Review pull requests", createdAt: "2026-05-20T10:00:00Z", completeBy: "2026-05-25T17:00:00Z" },
-  { id: "2", title: "Update documentation", createdAt: "2026-05-21T09:30:00Z", completeBy: "2026-05-26T12:00:00Z" },
-  { id: "3", title: "Fix login bug", createdAt: "2026-05-22T14:15:00Z", completeBy: "2026-05-24T18:00:00Z" },
-];
+import { createTask, getTasks } from "@/api/tasks";
+import { ClockLoader } from "react-spinners";
+import type { ApiTaskItem } from "@/types/apiTaskItem";
 
 export default function DashboardPage() {
   const { user } = useAuthenticator((context) => [context.user]);
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskBody, setNewTaskBody] = useState("");
   const [newTaskDate, setNewTaskDate] = useState<Date | undefined>();
@@ -43,8 +39,38 @@ export default function DashboardPage() {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isCreateTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const displayName = user?.signInDetails?.loginId || user?.username;
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getTasks();
+
+        if (data.items) {
+          const mappedTasks: Task[] = data.items.map((item: ApiTaskItem) => ({
+            id: item.taskId,
+            title: item.title,
+            createdAt: item.createdTime && item.createdHour 
+              ? `${item.createdTime}T${item.createdHour}:00Z` 
+              : new Date().toISOString(),
+            completeBy: item.deadlineTime && item.deadlineHour 
+              ? `${item.deadlineTime}T${item.deadlineHour}:00Z` 
+              : undefined,
+          }));
+          setTasks(mappedTasks);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   const handleCreateTaskDialogChange = (open: boolean) => {
     if (open) {
@@ -214,7 +240,11 @@ export default function DashboardPage() {
           <CardTitle>Your Tasks</CardTitle>
         </CardHeader>
         <CardContent>
-          {tasks.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <ClockLoader color="#888" size={40} />
+          </div>
+        ) : tasks.length === 0 ? (
             <Empty>
               <p className="text-muted-foreground">No tasks found. Create one to get started!</p>
             </Empty>

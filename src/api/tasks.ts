@@ -40,3 +40,9 @@ export const createTask = async (payload: CreateTaskPayload) => {
   console.log('Full Axios response for createTask:', response);
   return response.data;
 };
+
+export const getTasks = async () => {
+  const response = await apiClient.get('/tasks');
+  console.log('Full Axios response for getTasks:', response);
+  return response.data;
+};
