@@ -25,6 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { TaskItem } from "@/components/custom/TaskItem";
 import type { Task } from "@/types/task";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { createTask } from "@/api/tasks";
 
 const INITIAL_TASKS: Task[] = [
   { id: "1", title: "Review pull requests", createdAt: "2026-05-20T10:00:00Z", completeBy: "2026-05-25T17:00:00Z" },
@@ -36,10 +37,12 @@ export default function DashboardPage() {
   const { user } = useAuthenticator((context) => [context.user]);
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskBody, setNewTaskBody] = useState("");
   const [newTaskDate, setNewTaskDate] = useState<Date | undefined>();
   const [newTaskTime, setNewTaskTime] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isCreateTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const displayName = user?.signInDetails?.loginId || user?.username;
 
@@ -58,30 +61,52 @@ export default function DashboardPage() {
     setTasks((currentTasks) => currentTasks.filter((task) => task.id !== id));
   };
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     if (!newTaskTitle.trim()) {
       return;
     }
 
-    let completeBy = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // Default 7 days from now
-    if (newTaskDate) {
-      const [hours, minutes, seconds] = newTaskTime.split(':').map(Number);
-      const combinedDate = new Date(newTaskDate);
-      combinedDate.setHours(hours || 0, minutes || 0, seconds || 0);
-      completeBy = combinedDate.toISOString();
-    }
+    setIsCreating(true);
 
-    // TODO: Replace with API service call / modal flow
-    const newTask: Task = {
-      id: Math.random().toString(36).substring(7),
-      title: newTaskTitle,
-      createdAt: new Date().toISOString(),
-      completeBy,
-    };
-    setTasks((currentTasks) => [...currentTasks, newTask]);
-    setNewTaskTitle("");
-    setNewTaskDate(undefined);
-    setNewTaskTime("");
+    try {
+      const deadlineTime = newTaskDate ? format(newTaskDate, "yyyy-MM-dd") : "";
+      const deadlineHour = newTaskTime || "";
+
+      const response = await createTask({
+        userId: user?.userId || "",
+        title: newTaskTitle,
+        body: newTaskBody,
+        deadlineTime,
+        deadlineHour,
+      });
+
+      console.log("Data returned from createTask API:", response);
+
+      let completeBy = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // Default 7 days from now
+      if (newTaskDate) {
+        const [hours, minutes, seconds] = newTaskTime.split(':').map(Number);
+        const combinedDate = new Date(newTaskDate);
+        combinedDate.setHours(hours || 0, minutes || 0, seconds || 0);
+        completeBy = combinedDate.toISOString();
+      }
+
+      const newTask: Task = {
+        id: Math.random().toString(36).substring(7),
+        title: newTaskTitle,
+        createdAt: new Date().toISOString(),
+        completeBy,
+      };
+      setTasks((currentTasks) => [...currentTasks, newTask]);
+      setNewTaskTitle("");
+      setNewTaskBody("");
+      setNewTaskDate(undefined);
+      setNewTaskTime("");
+      setCreateTaskDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to create task", error);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -112,6 +137,15 @@ export default function DashboardPage() {
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
                   placeholder="e.g. Review pull requests"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="task-body">Description</Label>
+                <Input
+                  id="task-body"
+                  value={newTaskBody}
+                  onChange={(e) => setNewTaskBody(e.target.value)}
+                  placeholder="e.g. Test the POST endpoint using Postman."
                 />
               </div>
               <FieldGroup className="flex-row">
@@ -157,11 +191,18 @@ export default function DashboardPage() {
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => {
                 setNewTaskTitle("");
+                setNewTaskBody("");
                 setNewTaskDate(undefined);
                 setNewTaskTime("");
               }}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleCreateTask} disabled={!newTaskTitle.trim()}>
-                Create
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCreateTask();
+                }}
+                disabled={!newTaskTitle.trim() || isCreating}
+              >
+                {isCreating ? "Creating..." : "Create"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
