@@ -41,6 +41,12 @@ export const getTasks = async () => {
   return response.data;
 };
 
+export const getTask = async (taskId: string) => {
+  const response = await apiClient.get(`/tasks/${taskId}`);
+  console.log('Full Axios response for getTask:', response);
+  return response.data;
+};
+
 export const deleteTask = async (payload: DeleteTaskPayload) => {
   const response = await apiClient.delete('/tasks', { params: payload });
   console.log('Full Axios response for deleteTask:', response);

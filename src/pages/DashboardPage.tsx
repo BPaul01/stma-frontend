@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +32,7 @@ import type { ApiTaskItem } from "@/types/apiTaskItem";
 
 export default function DashboardPage() {
   const { user } = useAuthenticator((context) => [context.user]);
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskBody, setNewTaskBody] = useState("");
@@ -269,7 +271,16 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex flex-col">
                   {tasks.map((task) => (
-                    <TaskItem key={task.id} task={task} onDelete={handleDeleteTask} />
+                    <div 
+                      key={task.id} 
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).closest('button')) return;
+                        navigate(`/task/${task.id}`);
+                      }}
+                    >
+                      <TaskItem task={task} onDelete={handleDeleteTask} />
+                    </div>
                   ))}
                 </div>
               </div>

@@ -7,6 +7,7 @@ import '@aws-amplify/ui-react/styles.css';
 
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
+import TaskPage from './pages/TaskPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 Amplify.configure({
@@ -54,6 +55,14 @@ function App() {
                   element={
                      <ProtectedRoute>
                         <DashboardPage />
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path="/task/:id"
+                  element={
+                     <ProtectedRoute>
+                        <TaskPage />
                      </ProtectedRoute>
                   }
                />

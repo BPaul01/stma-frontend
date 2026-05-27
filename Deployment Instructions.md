@@ -7,3 +7,13 @@
 npx dotenvx set VITE_COGNITO_USER_POOL_ID "<user_pool_id>" -f .env.production
 npx dotenvx set VITE_COGNITO_CLIENT_ID "<client_id>" -f .env.production
 ```
+
+## 2. Update the package-lock.json
+- Remove it along with the node-modules folder 
+```bash
+rm -rf node_modules package-lock.json
+```
+- Generate it again using
+```bash
+npm install --legacy-peer-deps
+```
