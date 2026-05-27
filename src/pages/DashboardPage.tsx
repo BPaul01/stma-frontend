@@ -25,7 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { TaskItem } from "@/components/custom/TaskItem";
 import type { Task } from "@/types/task";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { createTask, getTasks } from "@/api/tasks";
+import { createTask, getTasks, deleteTask } from "@/api/tasks";
 import { ClockLoader } from "react-spinners";
 import type { ApiTaskItem } from "@/types/apiTaskItem";
 
@@ -82,9 +82,19 @@ export default function DashboardPage() {
     setCreateTaskDialogOpen(open);
   };
 
-  const handleDeleteTask = (id: string) => {
-    // TODO: Replace with API service call
+  const handleDeleteTask = async (id: string) => {
+    const previousTasks = [...tasks];
     setTasks((currentTasks) => currentTasks.filter((task) => task.id !== id));
+
+    try {
+      await deleteTask({
+        userId: user?.userId || "",
+        taskId: id,
+      });
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+      setTasks(previousTasks);
+    }
   };
 
   const handleCreateTask = async () => {
