@@ -1,9 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PlusIcon } from "lucide-react";
 import { TaskItem } from "@/components/custom/TaskItem";
 import type { Task } from "@/types/task";
@@ -16,6 +29,7 @@ const INITIAL_TASKS: Task[] = [
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
 
   const handleDeleteTask = (id: string) => {
     // TODO: Replace with API service call
@@ -23,24 +37,55 @@ export default function DashboardPage() {
   };
 
   const handleCreateTask = () => {
+    if (!newTaskTitle.trim()) {
+      return;
+    }
     // TODO: Replace with API service call / modal flow
     const newTask: Task = {
       id: Math.random().toString(36).substring(7),
-      title: "New Task",
+      title: newTaskTitle,
       createdAt: new Date().toISOString(),
       completeBy: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
     };
     setTasks((currentTasks) => [...currentTasks, newTask]);
+    setNewTaskTitle("");
   };
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <Button onClick={handleCreateTask}>
-          <PlusIcon data-icon="inline-start" />
-          Create Task
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Create Task
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Create New Task</AlertDialogTitle>
+              <AlertDialogDescription>
+                Please enter a title for the new task.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="grid gap-2">
+              <Label htmlFor="task-title">Title</Label>
+              <Input
+                id="task-title"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                placeholder="e.g. Review pull requests"
+              />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setNewTaskTitle("")}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleCreateTask} disabled={!newTaskTitle.trim()}>
+                Create
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <Card>
