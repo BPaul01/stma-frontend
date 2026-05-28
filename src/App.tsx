@@ -9,6 +9,7 @@ import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import TaskPage from './pages/TaskPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { ThemeProvider } from './components/ThemeProvider';
 
 Amplify.configure({
    Auth: {
@@ -44,6 +45,7 @@ function RedirectToStaticHome() {
 
 function App() {
    return (
+      <ThemeProvider defaultTheme="system" storageKey="stma-ui-theme">
       <Authenticator.Provider>
          <HashRouter>
             <Routes>
@@ -69,6 +71,7 @@ function App() {
             </Routes>
          </HashRouter>
       </Authenticator.Provider>
+      </ThemeProvider>
    )
 }
 

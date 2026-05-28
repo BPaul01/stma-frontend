@@ -9,6 +9,7 @@ import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { ClockLoader } from "react-spinners";
 import { getTask } from "@/api/tasks";
 import { updateTask } from "@/api/tasks";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
@@ -88,6 +89,8 @@ export default function TaskPage() {
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </Button>
+      <div className="flex items-center gap-4">
+        <ModeToggle />
         <Button 
           onClick={() => (isEditing ? handleSave() : setIsEditing(true))} 
           disabled={isSaving || (isEditing && !title.trim())}
@@ -101,6 +104,7 @@ export default function TaskPage() {
             "Edit Task"
           )}
         </Button>
+      </div>
       </div>
 
       <div className="mb-8 border-b pb-6">

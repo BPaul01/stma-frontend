@@ -29,6 +29,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { createTask, getTasks, deleteTask } from "@/api/tasks";
 import { ClockLoader } from "react-spinners";
 import type { ApiTaskItem } from "@/types/apiTaskItem";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function DashboardPage() {
   const { user } = useAuthenticator((context) => [context.user]);
@@ -153,14 +154,16 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold tracking-tight">
           {displayName ? `${displayName}'s Dashboard` : "Dashboard"}
         </h1>
-        <AlertDialog open={isCreateTaskDialogOpen} onOpenChange={handleCreateTaskDialogChange}>
-          <AlertDialogTrigger asChild>
-            <Button>
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Create Task
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <AlertDialog open={isCreateTaskDialogOpen} onOpenChange={handleCreateTaskDialogChange}>
+            <AlertDialogTrigger asChild>
+              <Button>
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Create Task
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Create New Task</AlertDialogTitle>
               <AlertDialogDescription>
@@ -244,7 +247,8 @@ export default function DashboardPage() {
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+          </AlertDialog>
+        </div>
       </div>
 
       <Card>
