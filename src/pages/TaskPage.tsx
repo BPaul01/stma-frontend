@@ -8,7 +8,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { ClockLoader } from "react-spinners";
 import { getTask } from "@/api/tasks";
-// import { updateTask } from "@/api/tasks"; // Uncomment and implement when API is ready
+import { updateTask } from "@/api/tasks";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
@@ -59,9 +59,12 @@ export default function TaskPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // TODO: Replace with actual API call (e.g., updateTask)
-      // await updateTask({ userId: user?.userId, taskId: id, title, body });
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await updateTask({
+        userId: user?.userId || "",
+        taskId: id || "",
+        title,
+        body,
+      });
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving task:", error);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import type { CreateTaskPayload } from '../types/createTaskPayload';
 import type { DeleteTaskPayload } from '../types/deleteTaskPayload';
+import type { UpdateTaskPayload } from '../types/updateTaskPayload';
 
 // Initialize Axios instance
 const apiClient = axios.create({
@@ -32,6 +33,12 @@ apiClient.interceptors.request.use(async (config) => {
 export const createTask = async (payload: CreateTaskPayload) => {
   const response = await apiClient.post('/tasks', payload);
   console.log('Full Axios response for createTask:', response);
+  return response.data;
+};
+
+export const updateTask = async (payload: UpdateTaskPayload) => {
+  const response = await apiClient.put('/tasks', payload);
+  console.log('Full Axios response for updateTask:', response);
   return response.data;
 };
 
